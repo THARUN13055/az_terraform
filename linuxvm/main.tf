@@ -3,21 +3,7 @@ module "general" {
   resource_grp_name = local.resource_grp_name
   location          = local.location
 }
-/*
-module "linuxvm" {
-  source               = "./module/vm"
-  resource_group_name  = local.resource_grp_name
-  location             = local.location
-  name                 = "tharun"
-  size                 = "Standard_B1s"
-  admin_username       = "linux"
-  password             = "@pass1234567"
-  sku                  = "22.04-LTS"
-  storage_account_type = "Standard_LRS"
-  disk_name            = "disk1"
-  disk_size            = "30"
-}
-*/
+
 module "networks" {
   source              = "./module/network"
   resource_group_name = local.resource_grp_name
@@ -28,7 +14,7 @@ module "networks" {
   subnet_name = ["subnet1", "subnet2"]
   // network interface
   ip_configuration_name         = "internal"
-  private_ip_address_allocation = "Static"
+  private_ip_address_allocation = "Dynamic"
   // public_ip
   public_ip_sku = "Standard"
   // network security group

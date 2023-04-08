@@ -76,3 +76,9 @@ resource "azurerm_network_security_rule" "nsg_rule" {
   network_security_group_name = azurerm_network_security_group.az_nsg[each.value.sgn].name
 
 }
+
+resource "azurerm_network_interface_security_group_association" "nisga" {
+  for_each = var.nsg_name
+  network_interface_id      = azurerm_network_interface.v_nic[each.value].id
+  network_security_group_id = azurerm_network_security_group.az_nsg[each.key].id
+}
