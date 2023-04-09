@@ -66,3 +66,19 @@ module "networks" {
     }
   ]
 }
+
+module "vmachine" {
+  source              = "./module/machine"
+  resource_group_name = local.resource_grp_name
+  location            = local.location
+  vmname              = ["vm1", "vm2"]
+  vmsize              = "Standard_B1s"
+  image_sku           = "22.04-LTS"
+  computer_name       = "sample"
+  admin_password      = "@password1234567"
+  admin_username      = "sample"
+  azurerm_network_interface = module.networks.v_nic[each.key].id
+  depends_on = [
+    module.networks
+  ]
+}

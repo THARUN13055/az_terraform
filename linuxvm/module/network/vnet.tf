@@ -3,6 +3,7 @@ module "general" {
   resource_grp_name = var.resource_group_name
   location          = var.location
 }
+
 resource "azurerm_virtual_network" "vnet" {
   name                = var.net_name
   location            = var.location
@@ -78,7 +79,7 @@ resource "azurerm_network_security_rule" "nsg_rule" {
 }
 
 resource "azurerm_network_interface_security_group_association" "nisga" {
-  for_each = var.nsg_name
+  for_each                  = var.nsg_name
   network_interface_id      = azurerm_network_interface.v_nic[each.value].id
   network_security_group_id = azurerm_network_security_group.az_nsg[each.key].id
 }
