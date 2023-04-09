@@ -77,7 +77,7 @@ module "vmachine" {
   computer_name       = "sample"
   admin_password      = "@password1234567"
   admin_username      = "sample"
-  azurerm_network_interface = module.networks.v_nic[each.key].id
+  azurerm_network_interface = module.networks.azurerm_network_interface.v_nic[each.key].ids
   depends_on = [
     module.networks
   ]
