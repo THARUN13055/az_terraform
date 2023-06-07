@@ -9,8 +9,7 @@ resource "azurerm_virtual_machine" "vmachine" {
   name                  = each.key
   location              = var.location
   resource_group_name   = var.resource_group_name
-  network_interface_ids = var.azurerm_network_interface
-  vm_size               = var.vmsize
+  network_interface_ids = var.network_interface_ids
 
   delete_os_disk_on_termination = true
 

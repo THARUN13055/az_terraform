@@ -15,6 +15,7 @@ module "networks" {
   // network interface
   ip_configuration_name         = "internal"
   private_ip_address_allocation = "Dynamic"
+
   // public_ip
   public_ip_sku = "Standard"
   // network security group
@@ -68,17 +69,14 @@ module "networks" {
 }
 
 module "vmachine" {
-  source              = "./module/machine"
-  resource_group_name = local.resource_grp_name
-  location            = local.location
-  vmname              = ["vm1", "vm2"]
-  vmsize              = "Standard_B1s"
-  image_sku           = "22.04-LTS"
-  computer_name       = "sample"
-  admin_password      = "@password1234567"
-  admin_username      = "sample"
-  azurerm_network_interface = module.networks.azurerm_network_interface.v_nic[each.key].ids
-  depends_on = [
-    module.networks
-  ]
-}
+  source                = "./module/machine"
+  resource_group_name   = local.resource_grp_name
+  location              = local.location
+  vmname                = ["vm1", "vm2"]
+  vmsize                = "Standard_B1s"
+  image_sku             = "22.04-LTS"
+  computer_name         = "sample"
+  admin_password        = "@password1234567"
+  admin_username        = "sample"
+  network_interface_ids = module.networks.azurerm_network_interface.v_nic
+} 

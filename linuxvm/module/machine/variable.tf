@@ -30,6 +30,6 @@ variable "admin_password" {
   type = string
 }
 
-variable "azurerm_network_interface" {
+variable "network_interface_ids" {
   type = string
 }

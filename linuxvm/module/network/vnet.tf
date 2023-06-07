@@ -38,7 +38,7 @@ resource "azurerm_network_interface" "v_nic" {
     private_ip_address_allocation = var.private_ip_address_allocation
     public_ip_address_id          = azurerm_public_ip.vpublic_ip[each.key].id
   }
-
+  
 }
 
 
