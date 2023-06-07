@@ -1,6 +1,6 @@
 locals {
   azure_resource_group = "nat"
-  location            = "eastus"
+  location             = "eastus"
   network = {
     name          = "vnet1"
     sub-name      = "sub1"

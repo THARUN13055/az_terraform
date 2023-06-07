@@ -28,5 +28,5 @@ module "machine" {
   vm-size              = "Standard_B1s"
   admin_username       = "tharun"
   admin_password       = "@Password1234567"
-  nat_gateway_id       = module.networks.nat-gateway.id
+  nat_gateway_id       = module.networks.nat_gateway_id.id
 }
