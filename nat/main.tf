@@ -29,4 +29,27 @@ module "machine" {
   admin_username       = "tharun"
   admin_password       = "@Password1234567"
   nat_gateway_id       = module.networks.nat_gateway_id
+
+  network_security_rule = [
+    {
+      id                     = 1,
+      name                   = "tcp-protocol"
+      priority               = 100
+      direction              = "Inbound"
+      access                 = "Allow"
+      source_port_range      = "*"
+      destination_port_range = "80"
+      protocol               = "Tcp"
+    },
+    {
+      id                     = 2,
+      name                   = "rdp-protocol"
+      priority               = 200
+      direction              = "Inbound"
+      access                 = "Allow"
+      source_port_range      = "*"
+      destination_port_range = "3389"
+      protocol               = "rdp"
+    }
+  ]
 }

@@ -44,3 +44,12 @@ variable "admin_password" {
 variable "nat_gateway_id" {
   type = string
 }
+
+variable "security_group_name" {
+  type    = string
+  default = "mysecurity-grp"
+}
+
+variable "network_security_rule" {
+  type = list(any)
+}

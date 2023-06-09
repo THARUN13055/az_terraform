@@ -35,6 +35,35 @@ resource "azurerm_network_interface" "n-interface" {
   }
 }
 
+resource "azurerm_network_security_group" "nsg" {
+  name                = var.security_group_name
+  location            = var.location
+  resource_group_name = var.azure_resource_group
+}
+
+resource "azurerm_network_security_rule" "nsr" {
+  for_each                    = { for rule in var.network_security_rule : rule.id => rule }
+  name                        = each.value.name
+  priority                    = each.value.priority
+  direction                   = each.value.direction
+  access                      = each.value.access
+  protocol                    = each.value.protocol
+  source_port_range           = each.value.source_port_range
+  destination_port_range      = each.value.destination_port_range
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.azure_resource_group
+  network_security_group_name = azurerm_network_security_group.nsg.name
+  depends_on = [
+    azurerm_network_security_group.nsg
+  ]
+}
+
+resource "azurerm_subnet_network_security_group_association" "subsecurityasso" {
+  subnet_id                 = azurerm_subnet.sub1.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
 resource "azurerm_windows_virtual_machine" "vm" {
   name                = var.vm-name
   resource_group_name = var.azure_resource_group
