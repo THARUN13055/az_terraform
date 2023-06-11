@@ -4,25 +4,36 @@ module "general" {
   location             = var.location
 }
 
+#virtual network
 resource "azurerm_virtual_network" "vnet1" {
   name                = var.vnet-name
   address_space       = [var.address_space]
   location            = var.location
   resource_group_name = var.azure_resource_group
+  depends_on = [
+    module.general
+  ]
 }
 
+#subnet
 resource "azurerm_subnet" "sub1" {
   name                 = var.sub-name
   resource_group_name  = var.azure_resource_group
   virtual_network_name = var.vnet-name
   address_prefixes     = [var.subnet_address]
+  depends_on = [
+    module.general,
+    azurerm_virtual_network.vnet1
+  ]
 }
 
+#gatway association
 resource "azurerm_subnet_nat_gateway_association" "example" {
   subnet_id      = azurerm_subnet.sub1.id
   nat_gateway_id = var.nat_gateway_id
 }
 
+#NIC
 resource "azurerm_network_interface" "n-interface" {
   name                = var.nic-name
   location            = var.location
@@ -33,14 +44,22 @@ resource "azurerm_network_interface" "n-interface" {
     subnet_id                     = azurerm_subnet.sub1.id
     private_ip_address_allocation = "Dynamic"
   }
+  depends_on = [
+    module.general
+  ]
 }
 
+#Network security group
 resource "azurerm_network_security_group" "nsg" {
   name                = var.security_group_name
   location            = var.location
   resource_group_name = var.azure_resource_group
+  depends_on = [
+    module.general
+  ]
 }
 
+#NSG rules
 resource "azurerm_network_security_rule" "nsr" {
   for_each                    = { for rule in var.network_security_rule : rule.id => rule }
   name                        = each.value.name
@@ -55,15 +74,18 @@ resource "azurerm_network_security_rule" "nsr" {
   resource_group_name         = var.azure_resource_group
   network_security_group_name = azurerm_network_security_group.nsg.name
   depends_on = [
-    azurerm_network_security_group.nsg
+    azurerm_network_security_group.nsg,
+    module.general
   ]
 }
 
+#NSG association
 resource "azurerm_subnet_network_security_group_association" "subsecurityasso" {
   subnet_id                 = azurerm_subnet.sub1.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+#virtual machine
 resource "azurerm_windows_virtual_machine" "vm" {
   name                = var.vm-name
   resource_group_name = var.azure_resource_group
@@ -86,4 +108,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
     sku       = "2016-Datacenter"
     version   = "latest"
   }
+  depends_on = [
+    module.general
+  ]
 }
